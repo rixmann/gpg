@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<title>JavaScript SigningTest</title>
+		<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'></script>
+		<script type='text/javascript' src='lib/BigInt.js'></script>
+		<script type='text/javascript' src='lib/base64.js'></script>
+		<script type='text/javascript' src='lib/gpg_parser.js'></script>
+		<script type='text/javascript' src='lib/GPGKey.js'></script>
+		<script type='text/javascript' src='lib/SignedMessage.js'></script>
+		<script type='text/javascript' src='lib/pidcrypt_util.js'></script>
+		<script type='text/javascript' src='lib/pidcrypt.js'></script>
+		<script type='text/javascript' src='lib/sha1.js'></script>
+		<script type='text/javascript' src='lib/sha256.js'></script>
+		<script type='text/javascript' src='lib/sha512.js'></script>
+		<script type='text/javascript' src='lib/ripemd160.js'></script>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	</head>
+	<body>
+		<div>
+			<table>
+				<tr>
+					<td>Message:</td>
+					<td>
+						<textarea rows='10' cols='64' id='message'>
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+this is a test-string
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iQIcBAEBAgAGBQJOntSMAAoJEEH+GXMF1XjpPIIQAMPD+RP9O72+PW86+B8OWtMi
+soTGfGgjOj/VznItRRBZiHeg7JvFVEbDiTaITOQd/l2UFbeP+A8/z8Cgmn9Azm28
+BmrgDKCbzyf9WzpAIp5aSiMl8e2Se/qph44EDTIEU0ShLiIdl9ZsbpqYnsGHDDcK
+SUDmT6uQa8qnBIT/de5nt3JWQvCR+s8N1RZTVBJ/X5GCkI7L64VTNj6J6m2kPux2
+1uMoq8azUr2hpbfpJ29UTEDmyvk1YE7xBE4A/lxriJ6BQkc9P2YXk3nz2nu3n0dj
+2EUgj888aKsIJhGFH+slOTXxasSoDZjfmlJeByE0dRwPnz3fQU+mXp0Rv/isWSsF
+Bh8vFdYesrkF2CjquQVnYSCVTw9OKsWRxQhO+C9Pr7b9Rk+yxptNVNHV9p1Qm4dw
+ognnAyacelnDoDOh/J7ypMgwk3+rsdT1d7wWeKSpc5ftTK/Xu5eK70r3k6BlWPPk
+wPPxTReAGYTRvRpL1xFGMXQLc4UemFgoadmxV1GG325Fur1NA28xfocn+IbS4XwP
+CnrLUwtUWlB0NaunbMYkija31phdQzQvurCk1oC+YMQjd8mjvk1bGSqt5bhXYj9L
+F5tf+vJva3UbcTbs6Cq9yH8HTNIPv8WjFC4cWD6DxLTkAMPNcVS9FCveJ/ikV40d
+KvMXFDHRYYYbVN7258PV
+=1z0X
+-----END PGP SIGNATURE-----
+						</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>PGP-Key:</td>
+					<td>
+						<textarea rows='10' cols='64' id='key'>
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+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
+=jySd
+-----END PGP PUBLIC KEY BLOCK-----
+						</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><button onclick='checkSignature()'>Check Signature!</button></td>
+				</tr>
+			</table>
+		</div>
+		<div id='result'></div>
+		<script type="text/javascript">
+// <![CDATA[
+		function checkSignature() {
+			var message = $("#message").val();
+			var armorKey = $("#key").val();
+
+			// FIXME: these methods should work!
+			var sigMes = SignedMessage.parse(message);
+
+			$("#result").text("");
+			$("#result").append("<p id='helfer2'></p>");
+			$("#helfer2").text("The content of the Message is: " + sigMes.content).append("<br />");
+
+			var key = GPGKey.parse(armorKey);
+
+			$("#result").append("<p id='helfer1'></p>");
+			$("#helfer1").text("Id: " + key.id).append("<br />");
+			//			$("#result").append("The key was signed by: " + key.sigs.join(", ") + "<br />");
+			// die Signaturen des Keys parsen wir nicht.... und wir überprüfen Sie auch nicht
+			if(sigMes.issuer_id != key.short_id) {
+				$("#result").append("The Message is signed with the key id " + sigMes.issuer_id + " but you entered a key with id " + key.short_id + "<br />");
+			} else {
+				$("#result").append("The fingerprint of the issuer is: " + key.fingerprint + "<br />");
+				if (sigMes.verify(key)) {
+					$("#result").append("The signature seems to be correct!<br />");
+				} else {
+					$("#result").append("The content was tampered!<br />");
+				}
+			}
+		}
+// ]]>
+</script>
+	</body>
+</html>
