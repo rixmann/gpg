@@ -128,31 +128,39 @@ I9PRh71eev+i3szP38sABRYjdLUS5pCdw4urnSyQm56ZjK509KaX6hqQdVhmL/SW
 		<div id='result'></div>
 		<script type="text/javascript">
 // <![CDATA[
-		function checkSignature() {
-			var message = $("#message").val();
-			var armorKey = $("#key").val();
-
-			// FIXME: these methods should work!
-			var sigMes = SignedMessage.parse(message);
-
-			$("#result").text("");
-			$("#result").append("<p id='helfer2'></p>");
-			$("#helfer2").text("The content of the Message is: " + sigMes.content).append("<br />");
-
-			var key = GPGKey.parse(armorKey);
-
-			$("#result").append("<p id='helfer1'></p>");
-			$("#helfer1").text("Id: " + key.id).append("<br />");
-			if(sigMes.issuer_id != key.short_id) {
-				$("#result").append("The Message is signed with the key id " + sigMes.issuer_id + " but you entered a key with id " + key.short_id + "<br />");
-			} else {
+function checkSignature() {
+		var message = $("#message").val();
+		var armorKey = $("#key").val();
+		$("#result").text("");
+		$("#result").append("<p id='helfer2'></p>");
+		try {
+		var sigMes = SignedMessage.parse(message);
+		} catch (err) {
+		  $("#helfer2").text("Failure when parsing the Signature: " + err).append("<br />");
+		  return null;
+		}
+		$("#helfer2").text("The content of the Message is: " + sigMes.content).append("<br />");
+		$("#result").append("<p id='helfer1'></p>");
+		try{
+		   var key = GPGKey.parse(armorKey);
+		} catch(err) {
+		   $("#helfer1").text("Failure when parsing the Key: " + err).append("<br />");
+		   return null;
+		}
+		$("#helfer1").text("Id: " + key.id).append("<br />");
+		if(sigMes.issuer_id != key.short_id) {
+		         $("#result").append("The Message is signed with the key id " + sigMes.issuer_id + " but you entered a key with id " + key.short_id + "<br />");
+		         } else {
 				$("#result").append("The fingerprint of the issuer is: " + key.fingerprint + "<br/>");
 		                try{
-		                    sigMes.verify(key);
-		                    $("#result").append("The signature seems to be correct!<br />");
-		                } catch(err) {
-					$("#result").append("The content was tampered!<br />");
-				} 
+                                	if (sigMes.verify(key)) {
+                                		$("#result").append("The signature seems to be correct!<br />");
+                           		} else {
+                                  		$("#result").append("The content was tampered!<br />");
+                                  	}
+                    		} catch(err) {
+                                	$("#result").append("Could not verify the Signature: " + err);
+                    		}
 			}
 		}
 // ]]>
