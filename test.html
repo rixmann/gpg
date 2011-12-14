@@ -143,17 +143,16 @@ I9PRh71eev+i3szP38sABRYjdLUS5pCdw4urnSyQm56ZjK509KaX6hqQdVhmL/SW
 
 			$("#result").append("<p id='helfer1'></p>");
 			$("#helfer1").text("Id: " + key.id).append("<br />");
-			//			$("#result").append("The key was signed by: " + key.sigs.join(", ") + "<br />");
-			// die Signaturen des Keys parsen wir nicht.... und wir überprüfen Sie auch nicht
 			if(sigMes.issuer_id != key.short_id) {
 				$("#result").append("The Message is signed with the key id " + sigMes.issuer_id + " but you entered a key with id " + key.short_id + "<br />");
 			} else {
-				$("#result").append("The fingerprint of the issuer is: " + key.fingerprint + "<br />");
-				if (sigMes.verify(key)) {
-					$("#result").append("The signature seems to be correct!<br />");
-				} else {
+				$("#result").append("The fingerprint of the issuer is: " + key.fingerprint + "<br/>");
+		                try{
+		                    sigMes.verify(key);
+		                    $("#result").append("The signature seems to be correct!<br />");
+		                } catch(err) {
 					$("#result").append("The content was tampered!<br />");
-				}
+				} 
 			}
 		}
 // ]]>
