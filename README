@@ -20,6 +20,6 @@ HOWTO use:
 
 You will need all JavaScript files from the lib-directory loaded on your page (you only need to have the hash-algorithms loaded which you'll use).
 
-For a full usage excample see the checkSignature-function in test.html.
+For a full usage example see the checkSignature-function in test.html.
 
 In GPGKey.js and SignedMessage.js are some Hints included too.
